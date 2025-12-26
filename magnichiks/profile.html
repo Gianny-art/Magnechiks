@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - MAGNICHIKS</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-bottom: 6rem;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+
+        .profile-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            border: 5px solid rgba(255,255,255,0.2);
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            align-self: start;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .menu-item a:hover,
+        .menu-item a.active {
+            background: var(--bg-secondary);
+            color: var(--primary-red);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .profile-main {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px var(--shadow-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark-red);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--bg-secondary);
+        }
+
+        .orders-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .order-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--primary-dark-red);
+        }
+
+        .order-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-paid { background: #d1ecf1; color: #0c5460; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-header i {
+            font-size: 1.5rem;
+            color: var(--primary-red);
+        }
+
+        .info-content p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Navigation simplifiée -->
+    <nav class="main-nav" style="padding: 1rem 2rem;">
+        <div class="nav-container">
+            <a href="index.html" class="logo-brand">
+                <div class="logo-icon">
+                    <i class="fas fa-crow"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 class="brand-name">MAGNICKIS</h1>
+                </div>
+            </a>
+            
+            <div class="top-controls">
+                <a href="index.html" class="auth-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h1 class="profile-name" id="profileName">Chargement...</h1>
+                <p class="profile-email" id="profileEmail">Chargement...</p>
+                <p class="profile-type" id="profileType"></p>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalOrders">0</span>
+                        <span class="stat-label">Commandes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalSpent">0 €</span>
+                        <span class="stat-label">Total dépensé</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="memberSince">-</span>
+                        <span class="stat-label">Membre depuis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#orders" class="active" onclick="showSection('orders')">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Mes Commandes</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#profile" onclick="showSection('profile')">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Informations Personnelles</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#addresses" onclick="showSection('addresses')">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Adresses</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#security" onclick="showSection('security')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Sécurité</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#notifications" onclick="showSection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#preferences" onclick="showSection('preferences')">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Préférences</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Déconnexion
+                </button>
+            </div>
+
+            <!-- Contenu principal -->
+            <div class="profile-main">
+                <!-- Commandes -->
+                <div id="ordersSection" class="profile-section">
+                    <h2 class="section-title">Mes Commandes Récentes</h2>
+                    <div class="orders-grid" id="ordersList">
+                        <!-- Commandes chargées dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Profil -->
+                <div id="profileSection" class="profile-section" style="display: none;">
+                    <h2 class="section-title">Informations Personnelles</h2>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-user"></i>
+                                <h3>Informations de base</h3>
+                            </div>
+                            <div class="info-content">
+                                <p>
+                                    <span class="info-label">Nom complet:</span>
+                                    <span class="info-value" id="infoName"></span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Email:</span>
+                                    <span class="info-value" id="infoEmail"></span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Téléphone:</span>
+                                    <span class="info-value" id="infoPhone"></span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Type de compte:</span>
+                                    <span class="info-value" id="infoType"></span>
+                                </p>
+                            </div>
+                            <button class="edit-btn" onclick="editProfile()">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Statistiques</h3>
+                            </div>
+                            <div class="info-content">
+                                <p>
+                                    <span class="info-label">Commandes totales:</span>
+                                    <span class="info-value" id="infoOrders">0</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Total dépensé:</span>
+                                    <span class="info-value" id="infoSpent">0 €</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Dernière commande:</span>
+                                    <span class="info-value" id="infoLastOrder">-</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Statut:</span>
+                                    <span class="info-value" id="infoStatus">Actif</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adresses -->
+                <div id="addressesSection" class="profile-section" style="display: none;">
+                    <h2 class="section-title">Mes Adresses</h2>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-home"></i>
+                                <h3>Adresse Principale</h3>
+                            </div>
+                            <div class="info-content">
+                                <p id="primaryAddress">Aucune adresse enregistrée</p>
+                            </div>
+                            <button class="edit-btn" onclick="editAddress()">
+                                <i class="fas fa-edit"></i> Gérer les adresses
+                            </button>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-warehouse"></i>
+                                <h3>Préférences de Livraison</h3>
+                            </div>
+                            <div class="info-content">
+                                <p>
+                                    <span class="info-label">Mode préféré:</span>
+                                    <span class="info-value" id="deliveryPref">Retrait en entrepôt</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Heures préférées:</span>
+                                    <span class="info-value" id="deliveryHours">9h-18h</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Instructions:</span>
+                                    <span class="info-value" id="deliveryInstructions">Aucune</span>
+                                </p>
+                            </div>
+                            <button class="edit-btn" onclick="editDeliveryPref()">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sécurité -->
+                <div id="securitySection" class="profile-section" style="display: none;">
+                    <h2 class="section-title">Sécurité du Compte</h2>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-lock"></i>
+                                <h3>Mot de passe</h3>
+                            </div>
+                            <div class="info-content">
+                                <p>Dernière modification: <span id="lastPasswordChange">-</span></p>
+                            </div>
+                            <button class="edit-btn" onclick="changePassword()">
+                                <i class="fas fa-key"></i> Changer le mot de passe
+                            </button>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Sécurité</h3>
+                            </div>
+                            <div class="info-content">
+                                <p>
+                                    <span class="info-label">Connexion active:</span>
+                                    <span class="info-value">Maintenant</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Dernière connexion:</span>
+                                    <span class="info-value" id="lastLogin">-</span>
+                                </p>
+                                <p>
+                                    <span class="info-label">Appareils connectés:</span>
+                                    <span class="info-value">1</span>
+                                </p>
+                            </div>
+                            <button class="edit-btn" onclick="viewSecurity()">
+                                <i class="fas fa-eye"></i> Voir l'activité
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="profileNotification"></div>
+
+    <script>
+        // Données de l'utilisateur
+        let currentUser = null;
+        let userOrders = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            loadUserOrders();
+            setupEventListeners();
+        });
+
+        // Charger le profil utilisateur
+        function loadUserProfile() {
+            const user = JSON.parse(localStorage.getItem('magnickis_user'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            currentUser = user;
+
+            // Mettre à jour l'affichage
+            document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileType').textContent = user.type === 'admin' ? 'Administrateur' : 'Client';
+            
+            document.getElementById('infoName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('infoEmail').textContent = user.email;
+            document.getElementById('infoPhone').textContent = user.phone || 'Non renseigné';
+            document.getElementById('infoType').textContent = user.type === 'admin' ? 'Administrateur' : 'Client';
+
+            // Date d'inscription
+            const joinDate = new Date(user.createdAt);
+            document.getElementById('memberSince').textContent = joinDate.toLocaleDateString();
+            
+            // Dernière connexion
+            if (user.lastLogin) {
+                const lastLogin = new Date(user.lastLogin);
+                document.getElementById('lastLogin').textContent = lastLogin.toLocaleString();
+            }
+        }
+
+        // Charger les commandes de l'utilisateur
+        function loadUserOrders() {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            userOrders = orders.filter(order => order.userId === currentUser?.id);
+            
+            // Mettre à jour les statistiques
+            document.getElementById('totalOrders').textContent = userOrders.length;
+            
+            const totalSpent = userOrders.reduce((sum, order) => sum + order.total, 0);
+            document.getElementById('totalSpent').textContent = totalSpent.toFixed(2) + ' €';
+            document.getElementById('infoSpent').textContent = totalSpent.toFixed(2) + ' €';
+            document.getElementById('infoOrders').textContent = userOrders.length;
+            
+            // Dernière commande
+            if (userOrders.length > 0) {
+                const lastOrder = userOrders[userOrders.length - 1];
+                const lastOrderDate = new Date(lastOrder.date);
+                document.getElementById('infoLastOrder').textContent = lastOrderDate.toLocaleDateString();
+            }
+            
+            // Afficher les commandes
+            displayOrders();
+        }
+
+        // Afficher les commandes
+        function displayOrders() {
+            const ordersList = document.getElementById('ordersList');
+            
+            if (userOrders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Aucune commande</h3>
+                        <p>Vous n'avez pas encore passé de commande.</p>
+                        <a href="index.html#batches" class="action-btn primary" style="margin-top: 1rem;">
+                            <i class="fas fa-shopping-bag"></i> Découvrir nos produits
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersList.innerHTML = userOrders.slice(0, 5).map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">Commande #${order.id}</div>
+                            <div class="order-date">${new Date(order.date).toLocaleDateString()}</div>
+                        </div>
+                        <div class="order-status status-${order.status}">
+                            ${getStatusText(order.status)}
+                        </div>
+                    </div>
+                    
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Livraison</span>
+                            <span class="detail-value">${order.delivery === 'pickup' ? 'Retrait' : 'Domicile'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Articles</span>
+                            <span class="detail-value">${order.batches.length} lot(s)</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total</span>
+                            <span class="detail-value">${order.total.toFixed(2)} €</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="action-btn" onclick="viewOrderDetails(${order.id})">
+                            <i class="fas fa-eye"></i> Détails
+                        </button>
+                        ${order.status === 'pending' ? `
+                            <button class="action-btn primary" onclick="payOrder(${order.id})">
+                                <i class="fas fa-credit-card"></i> Payer
+                            </button>
+                            <button class="action-btn" onclick="cancelOrder(${order.id})">
+                                <i class="fas fa-times"></i> Annuler
+                            </button>
+                        ` : ''}
+                        ${order.status === 'paid' && order.delivery === 'pickup' ? `
+                            <button class="action-btn primary" onclick="confirmPickup(${order.id})">
+                                <i class="fas fa-check"></i> Confirmer retrait
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Obtenir le texte du statut
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'En attente',
+                'paid': 'Payée',
+                'delivered': 'Livrée',
+                'cancelled': 'Annulée'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Afficher une section
+        function showSection(sectionId) {
+            // Masquer toutes les sections
+            document.querySelectorAll('.profile-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Afficher la section sélectionnée
+            document.getElementById(sectionId + 'Section').style.display = 'block';
+            
+            // Mettre à jour le menu
+            document.querySelectorAll('.menu-item a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Voir les détails d'une commande
+        function viewOrderDetails(orderId) {
+            const order = userOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const batchesList = order.batches.map(batch => `
+                <div style="margin-bottom: 10px; padding: 10px; background: var(--bg-card); border-radius: 5px;">
+                    <strong>${batch.name}</strong><br>
+                    Quantité: ${batch.quantity}<br>
+                    Prix unitaire: ${batch.price.toFixed(2)} €<br>
+                    Sous-total: ${batch.total.toFixed(2)} €
+                </div>
+            `).join('');
+            
+            alert(`
+                Détails de la commande #${order.id}
+                
+                Date: ${new Date(order.date).toLocaleString()}
+                Statut: ${getStatusText(order.status)}
+                Livraison: ${order.delivery === 'pickup' ? 'Retrait en entrepôt' : 'Livraison à domicile'}
+                Total: ${order.total.toFixed(2)} €
+                
+                Lots commandés:
+                ${batchesList}
+            `);
+        }
+
+        // Payer une commande
+        function payOrder(orderId) {
+            if (confirm('Voulez-vous procéder au paiement de cette commande ?')) {
+                // Simulation de paiement
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].status = 'paid';
+                    orders[orderIndex].paymentDate = new Date().toISOString();
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                    
+                    showNotification('Paiement effectué avec succès !');
+                    loadUserOrders(); // Recharger les commandes
+                }
+            }
+        }
+
+        // Annuler une commande
+        function cancelOrder(orderId) {
+            if (confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].status = 'cancelled';
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                    
+                    showNotification('Commande annulée');
+                    loadUserOrders(); // Recharger les commandes
+                }
+            }
+        }
+
+        // Confirmer le retrait
+        function confirmPickup(orderId) {
+            if (confirm('Confirmez-vous avoir récupéré votre commande ?')) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].status = 'delivered';
+                    orders[orderIndex].deliveryDate = new Date().toISOString();
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                    
+                    showNotification('Retrait confirmé ! Merci pour votre achat.');
+                    loadUserOrders(); // Recharger les commandes
+                }
+            }
+        }
+
+        // Modifier le profil
+        function editProfile() {
+            const newPhone = prompt('Nouveau numéro de téléphone:', currentUser.phone || '');
+            if (newPhone !== null) {
+                // Mettre à jour l'utilisateur
+                currentUser.phone = newPhone;
+                localStorage.setItem('magnickis_user', JSON.stringify(currentUser));
+                
+                // Mettre à jour la liste des utilisateurs
+                const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex > -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('magnickis_users', JSON.stringify(users));
+                }
+                
+                loadUserProfile();
+                showNotification('Profil mis à jour avec succès');
+            }
+        }
+
+        // Changer le mot de passe
+        function changePassword() {
+            const oldPassword = prompt('Ancien mot de passe:');
+            if (!oldPassword) return;
+            
+            if (oldPassword !== currentUser.password) {
+                showNotification('Mot de passe incorrect', 'error');
+                return;
+            }
+            
+            const newPassword = prompt('Nouveau mot de passe:');
+            if (!newPassword || newPassword.length < 6) {
+                showNotification('Le mot de passe doit contenir au moins 6 caractères', 'error');
+                return;
+            }
+            
+            const confirmPassword = prompt('Confirmez le nouveau mot de passe:');
+            if (newPassword !== confirmPassword) {
+                showNotification('Les mots de passe ne correspondent pas', 'error');
+                return;
+            }
+            
+            // Mettre à jour le mot de passe
+            currentUser.password = newPassword;
+            currentUser.lastPasswordChange = new Date().toISOString();
+            
+            localStorage.setItem('magnickis_user', JSON.stringify(currentUser));
+            
+            // Mettre à jour la liste des utilisateurs
+            const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex > -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('magnickis_users', JSON.stringify(users));
+            }
+            
+            document.getElementById('lastPasswordChange').textContent = 'Aujourd\'hui';
+            showNotification('Mot de passe changé avec succès');
+        }
+
+        // Déconnexion
+        function logout() {
+            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                localStorage.removeItem('magnickis_user');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Configuration des événements
+        function setupEventListeners() {
+            // Gestion des clics sur les liens du menu
+            document.querySelectorAll('.menu-item a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href').substring(1);
+                    showSection(sectionId);
+                });
+            });
+        }
+
+        // Afficher une notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('profileNotification');
+            if (!notification) return;
+            
+            notification.textContent = message;
+            notification.className = 'notification show';
+            notification.style.background = type === 'error' ? 
+                'linear-gradient(135deg, #dc3545, #c82333)' :
+                'linear-gradient(135deg, var(--primary-red), var(--primary-dark-red))';
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Fonctions pour les autres sections (simplifiées)
+        function editAddress() {
+            showNotification('Cette fonctionnalité sera disponible prochainement', 'info');
+        }
+
+        function editDeliveryPref() {
+            showNotification('Cette fonctionnalité sera disponible prochainement', 'info');
+        }
+
+        function viewSecurity() {
+            showNotification('Cette fonctionnalité sera disponible prochainement', 'info');
+        }
+    </script>
+</body>
+</html>

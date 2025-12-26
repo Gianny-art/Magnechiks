@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnickis - Excellence Avicole</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+</head>
+<body class="light-theme">
+    <!-- Navigation principale -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="logo-brand">
+                <div class="logo-icon">
+                    <i class="fas fa-crow"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 class="brand-name">MAGNICHIKS</h1>
+                    <p class="brand-tagline">Excellence Avicole depuis 2025</p>
+                </div>
+            </div>
+
+            <!-- Contrôles supérieurs -->
+            <div class="top-controls">
+                <!-- Sélecteur de langue avec drapeaux -->
+                <div class="language-selector">
+                    <div class="current-lang" id="currentLang">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="FR">
+                        <span>FR</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option" data-lang="fr">
+                            <img src="https://flagcdn.com/w20/fr.png" alt="FR">
+                            <span>Français</span>
+                        </div>
+                        <div class="lang-option" data-lang="en">
+                            <img src="https://flagcdn.com/w20/gb.png" alt="EN">
+                            <span>English</span>
+                        </div>
+                        <div class="lang-option" data-lang="es">
+                            <img src="https://flagcdn.com/w20/es.png" alt="ES">
+                            <span>Español</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thème -->
+                <div class="theme-switch">
+                    <div class="sun-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="theme-slider"></span>
+                    </label>
+                    <div class="moon-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                </div>
+
+                <!-- Connexion/Profil -->
+                <div class="auth-section">
+                    <a href="login.html" class="auth-btn" id="authButton">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="auth-text" data-i18n="login">Se Connecter</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Message frappant -->
+    <section class="hero-banner">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h2 class="hero-title" data-i18n="hero_title">L'EXCELLENCE DANS CHAQUE POULET</h2>
+                <p class="hero-subtitle" data-i18n="hero_subtitle">Élevés avec passion, nourris avec soin, livrés avec fierté</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-award"></i>
+                        <div>
+                            <h3>25+</h3>
+                            <p data-i18n="years_exp">Ans d'expérience</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3>10K+</h3>
+                            <p data-i18n="happy_clients">Clients satisfaits</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-egg"></i>
+                        <div>
+                            <h3>1M+</h3>
+                            <p data-i18n="chickens_year">Poulets/an</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#catalogue" class="hero-cta" data-i18n="explore_products">Explorer nos produits</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tabs-container">
+            <a href="#presentation" class="tab-item active">
+                <i class="fas fa-home"></i>
+                <span data-i18n="home">Accueil</span>
+            </a>
+            <a href="#catalogue" class="tab-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span data-i18n="catalogue">Catalogue</span>
+            </a>
+            <a href="#batches" class="tab-item">
+                <i class="fas fa-layer-group"></i>
+                <span data-i18n="batches">Lots</span>
+            </a>
+            <a href="#delivery" class="tab-item">
+                <i class="fas fa-truck"></i>
+                <span data-i18n="delivery">Livraison</span>
+            </a>
+            <a href="#partners" class="tab-item">
+                <i class="fas fa-handshake"></i>
+                <span data-i18n="partners">Partenaires</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <!-- Présentation -->
+        <section id="presentation" class="content-section active">
+            <div class="section-header">
+                <h2 data-i18n="our_story">Notre Histoire</h2>
+                <p class="section-subtitle" data-i18n="story_desc">Une tradition d'excellence depuis 1995</p>
+            </div>
+            
+            <div class="story-grid">
+                <div class="story-card">
+                    <div class="story-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 data-i18n="sustainable_title">Agriculture Durable</h3>
+                    <p data-i18n="sustainable_desc">Nous pratiquons une agriculture responsable respectueuse de l'environnement et du bien-être animal.</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 data-i18n="quality_title">Qualité Premium</h3>
+                    <p data-i18n="quality_desc">Des poulets élevés en plein air avec une alimentation naturelle pour une chair tendre et savoureuse.</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-icon">
+                        <i class="fas fa-truck-fast"></i>
+                    </div>
+                    <h3 data-i18n="delivery_title">Livraison Garantie</h3>
+                    <p data-i18n="delivery_desc">Livraison rapide et sécurisée pour garantir la fraîcheur de nos produits.</p>
+                </div>
+            </div>
+
+            <!-- Carousel perspectives -->
+            <div class="perspectives-slider">
+                <h2 data-i18n="perspectives">Nos Perspectives</h2>
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="perspective-card">
+                                <i class="fas fa-solar-panel"></i>
+                                <h3 data-i18n="perspective1_title">Énergie Solaire</h3>
+                                <p data-i18n="perspective1_desc">Installation de panneaux solaires pour une production 100% verte d'ici 2024.</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="perspective-card">
+                                <i class="fas fa-robot"></i>
+                                <h3 data-i18n="perspective2_title">Automatisation</h3>
+                                <p data-i18n="perspective2_desc">Modernisation de nos installations avec des systèmes automatisés intelligents.</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="perspective-card">
+                                <i class="fas fa-globe-europe"></i>
+                                <h3 data-i18n="perspective3_title">Expansion</h3>
+                                <p data-i18n="perspective3_desc">Ouverture de nouveaux marchés en Europe avec des standards de qualité élevés.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalogue -->
+        <section id="catalogue" class="content-section">
+            <div class="section-header">
+                <h2 data-i18n="products_catalogue">Catalogue des Produits</h2>
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="productSearch" placeholder="Rechercher un produit..." data-i18n="search_placeholder">
+                        <button class="search-btn" data-i18n="search">Rechercher</button>
+                    </div>
+                    <div class="search-filters">
+                        <select id="categoryFilter">
+                            <option value="" data-i18n="all_categories">Toutes catégories</option>
+                            <option value="fresh" data-i18n="fresh">Frais</option>
+                            <option value="frozen" data-i18n="frozen">Congelé</option>
+                            <option value="bio" data-i18n="organic">Bio</option>
+                        </select>
+                        <select id="sortFilter">
+                            <option value="price_asc" data-i18n="price_low">Prix croissant</option>
+                            <option value="price_desc" data-i18n="price_high">Prix décroissant</option>
+                            <option value="name_asc" data-i18n="name_asc">Nom A-Z</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Produits chargés dynamiquement -->
+            </div>
+        </section>
+
+        <!-- Lots disponibles -->
+        <section id="batches" class="content-section">
+            <div class="section-header">
+                <h2 data-i18n="available_batches">Lots Disponibles</h2>
+                <p class="section-subtitle" data-i18n="batch_subtitle">Choisissez parmi nos lots préparés avec soin</p>
+            </div>
+
+            <div class="batch-selection">
+                <div class="batch-filters">
+                    <div class="filter-group">
+                        <label data-i18n="weight">Poids</label>
+                        <div class="range-slider">
+                            <input type="range" id="weightMin" min="1" max="3" step="0.5" value="1">
+                            <input type="range" id="weightMax" min="1" max="3" step="0.5" value="3">
+                            <div class="range-values">
+                                <span id="weightRange">1 - 3 kg</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label data-i18n="age">Âge (jours)</label>
+                        <select id="ageSelect">
+                            <option value="">Tous</option>
+                            <option value="40">40 jours</option>
+                            <option value="50">50 jours</option>
+                            <option value="60">60 jours</option>
+                            <option value="70">70+ jours</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label data-i18n="state">État</label>
+                        <div class="state-buttons">
+                            <button class="state-btn active" data-state="all" data-i18n="all">Tous</button>
+                            <button class="state-btn" data-state="fresh" data-i18n="fresh">Frais</button>
+                            <button class="state-btn" data-state="frozen" data-i18n="frozen">Congelé</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label data-i18n="quantity">Quantité</label>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                            <input type="number" id="batchQuantity" min="1" max="100" value="1">
+                            <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            <span class="qty-label" data-i18n="units">unités</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="batches-grid" id="batchesGrid">
+                    <!-- Lots chargés dynamiquement -->
+                </div>
+            </div>
+
+            <div class="order-summary" id="orderSummary">
+                <h3 data-i18n="order_summary">Résumé de la commande</h3>
+                <div class="summary-content">
+                    <div class="summary-item">
+                        <span data-i18n="selected_batches">Lots sélectionnés:</span>
+                        <span id="selectedBatches">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span data-i18n="total_quantity">Quantité totale:</span>
+                        <span id="totalQuantity">0</span>
+                    </div>
+                    <div class="summary-item total">
+                        <span data-i18n="total_amount">Montant total:</span>
+                        <span id="totalAmount">0 fcfa</span>
+                    </div>
+                </div>
+                <button class="order-btn" id="placeOrder" data-i18n="place_order">Passer la commande</button>
+            </div>
+        </section>
+
+        <!-- Livraison -->
+        <section id="delivery" class="content-section">
+            <div class="section-header">
+                <h2 data-i18n="delivery_options">Options de Livraison</h2>
+            </div>
+
+            <div class="delivery-options">
+                <div class="delivery-card">
+                    <div class="delivery-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <h3 data-i18n="pickup">Retrait en entrepôt</h3>
+                    <p data-i18n="pickup_desc">Venez récupérer votre commande directement à notre entrepôt</p>
+                    <ul class="delivery-list">
+                        <li><i class="fas fa-check"></i> <span data-i18n="pickup_benefit1">Gratuit</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="pickup_benefit2">Disponible 24h/24</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="pickup_benefit3">Service rapide</span></li>
+                    </ul>
+                    <button class="delivery-select" data-delivery="pickup" data-i18n="choose_pickup">Choisir le retrait</button>
+                </div>
+
+                <div class="delivery-card">
+                    <div class="delivery-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 data-i18n="home_delivery">Livraison à domicile</h3>
+                    <p data-i18n="home_delivery_desc">Nous livrons directement chez vous en 24-48h</p>
+                    <ul class="delivery-list">
+                        <li><i class="fas fa-check"></i> <span data-i18n="home_benefit1">Livraison express</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="home_benefit2">Suivi en temps réel</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="home_benefit3">Emballage isotherme</span></li>
+                    </ul>
+                    <div class="delivery-price">
+                        <span data-i18n="from">À partir de</span>
+                        <strong>9.99 fcfa</strong>
+                    </div>
+                    <button class="delivery-select" data-delivery="home" data-i18n="choose_delivery">Choisir la livraison</button>
+                </div>
+            </div>
+
+            <!-- Simulation de paiement -->
+            <div class="payment-simulation" id="paymentSection">
+                <h3 data-i18n="payment_simulation">Simulation de Paiement</h3>
+                <div class="payment-methods">
+                    <div class="method-card active" data-method="card">
+                        <i class="fas fa-credit-card"></i>
+                        <span data-i18n="credit_card">Carte bancaire</span>
+                    </div>
+                    <div class="method-card" data-method="paypal">
+                        <i class="fab fa-paypal"></i>
+                        <span>PayPal</span>
+                    </div>
+                    <div class="method-card" data-method="transfer">
+                        <i class="fas fa-university"></i>
+                        <span data-i18n="transfer">Virement</span>
+                    </div>
+                </div>
+
+                <div class="payment-form">
+                    <div class="form-group">
+                        <label data-i18n="card_number">Numéro de carte</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-i18n="expiry_date">Date d'expiration</label>
+                            <input type="text" placeholder="MM/AA">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="cvc">CVC</label>
+                            <input type="text" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="payment-total">
+                        <span data-i18n="amount_to_pay">Montant à payer:</span>
+                        <strong id="paymentAmount">0 FCFA</strong>
+                    </div>
+                    <button class="pay-btn" id="processPayment" data-i18n="pay_now">Payer maintenant</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partenaires -->
+        <section id="partners" class="content-section">
+            <div class="section-header">
+                <h2 data-i18n="our_partners">Nos Partenaires</h2>
+            </div>
+
+            <div class="partners-grid">
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>BioFrance</h3>
+                    <p data-i18n="partner1_desc">Fournisseur d'aliments biologiques certifiés</p>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>FastLogistics</h3>
+                    <p data-i18n="partner2_desc">Services de logistique et transport réfrigéré</p>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3>AgroLab</h3>
+                    <p data-i18n="partner3_desc">Contrôle qualité et analyses sanitaires</p>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-logo">
+                        <i class="fas fa-shopping-basket"></i>
+                    </div>
+                    <h3>MarketPrime</h3>
+                    <p data-i18n="partner4_desc">Distribution grande surface premium</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-crow"></i>
+                    <h3>MAGNICKIS</h3>
+                </div>
+                <p class="footer-motto" data-i18n="footer_motto">L'excellence dans chaque poulet depuis 1995</p>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-i18n="quick_links">Liens rapides</h4>
+                <ul class="footer-links">
+                    <li><a href="#presentation" data-i18n="about_us">À propos</a></li>
+                    <li><a href="#catalogue" data-i18n="products">Produits</a></li>
+                    <li><a href="#batches" data-i18n="batches">Lots</a></li>
+                    <li><a href="#delivery" data-i18n="delivery">Livraison</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-i18n="contact">Contact</h4>
+                <div class="contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> bandjoun</p>
+                    <p><i class="fas fa-phone"></i> +237 xxx xxx</p>
+                    <p><i class="fas fa-envelope"></i> contact@magnickis.fr</p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-i18n="follow_us">Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Magnickis. <span data-i18n="rights_reserved">Tous droits réservés.</span></p>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Chargement des scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="scripts/translations.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

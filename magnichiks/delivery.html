@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraison - Magnickis</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .delivery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-bottom: 6rem;
+        }
+
+        .delivery-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .delivery-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark-red);
+            margin-bottom: 1rem;
+        }
+
+        .delivery-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .delivery-steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .delivery-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50px;
+            right: 50px;
+            height: 3px;
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 200px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .step.active .step-title {
+            color: var(--primary-dark-red);
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .delivery-content {
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            margin-bottom: 2rem;
+        }
+
+        .delivery-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .delivery-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark-red);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .delivery-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .delivery-option {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .delivery-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+            box-shadow: 0 10px 25px rgba(198, 40, 40, 0.1);
+        }
+
+        .delivery-option.selected {
+            border-color: var(--primary-red);
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.05), transparent);
+        }
+
+        .option-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-cream), var(--primary-white));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary-red);
+            font-size: 2.5rem;
+        }
+
+        .option-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-dark-red);
+        }
+
+        .option-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin: 1rem 0;
+        }
+
+        .option-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .option-features li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .option-features i {
+            color: var(--primary-red);
+            font-size: 0.9rem;
+        }
+
+        .address-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-dark-red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .pickup-info {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .pickup-icon {
+            font-size: 4rem;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+        }
+
+        .pickup-address {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+        }
+
+        .pickup-hours {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .hour-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .hour-card.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+        }
+
+        .hour-card h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .method-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+        }
+
+        .method-card.selected {
+            border-color: var(--primary-red);
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.05), transparent);
+        }
+
+        .method-icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        .payment-form {
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .payment-summary {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .confirmation-card {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .confirmation-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .confirmation-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .order-details {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 25px rgba(198, 40, 40, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .deposit-simulation {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .deposit-status {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .status-item.active .status-icon {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+        }
+
+        .status-item.completed .status-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-item.failed .status-icon {
+            background: #dc3545;
+            color: white;
+        }
+
+        .simulation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .delivery-steps {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .delivery-steps::before {
+                display: none;
+            }
+
+            .delivery-options {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .pickup-hours {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Navigation simplifiée -->
+    <nav class="main-nav" style="padding: 1rem 2rem;">
+        <div class="nav-container">
+            <a href="index.html" class="logo-brand">
+                <div class="logo-icon">
+                    <i class="fas fa-crow"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 class="brand-name">MAGNICKIS</h1>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="delivery-container">
+        <div class="delivery-header">
+            <h1>Finalisez votre commande</h1>
+            <p>Suivez les étapes pour finaliser votre livraison et paiement</p>
+        </div>
+
+        <!-- Étapes -->
+        <div class="delivery-steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-title">Livraison</div>
+                <div class="step-desc">Choisissez votre mode</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-title">Adresse</div>
+                <div class="step-desc">Indiquez où livrer</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-title">Paiement</div>
+                <div class="step-desc">Payez en toute sécurité</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-title">Confirmation</div>
+                <div class="step-desc">Recevez votre confirmation</div>
+            </div>
+        </div>
+
+        <!-- Contenu -->
+        <div class="delivery-content">
+            <!-- Étape 1 : Livraison -->
+            <div id="step1Section" class="delivery-section active">
+                <h2 class="section-title">Choisissez votre mode de livraison</h2>
+                
+                <div class="delivery-options">
+                    <div class="delivery-option" onclick="selectDelivery('pickup')" id="pickupOption">
+                        <div class="option-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="option-title">Retrait en entrepôt</div>
+                        <div class="option-price">GRATUIT</div>
+                        <ul class="option-features">
+                            <li><i class="fas fa-check"></i> Aucun frais supplémentaire</li>
+                            <li><i class="fas fa-check"></i> Disponible 24h/24, 7j/7</li>
+                            <li><i class="fas fa-check"></i> Service express</li>
+                            <li><i class="fas fa-check"></i> Contrôle qualité sur place</li>
+                        </ul>
+                        <div class="pickup-info">
+                            <p><strong>Entrepôt Magnickis</strong></p>
+                            <p>123 Rue de la Ferme, 75000 Paris</p>
+                        </div>
+                    </div>
+                    
+                    <div class="delivery-option" onclick="selectDelivery('home')" id="homeOption">
+                        <div class="option-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="option-title">Livraison à domicile</div>
+                        <div class="option-price">À partir de 9.99 FCFA</div>
+                        <ul class="option-features">
+                            <li><i class="fas fa-check"></i> Livraison en 24-48h</li>
+                            <li><i class="fas fa-check"></i> Suivi en temps réel</li>
+                            <li><i class="fas fa-check"></i> Emballage isotherme</li>
+                            <li><i class="fas fa-check"></i> Livraison matinale</li>
+                        </ul>
+                        <div class="delivery-info">
+                            <p><small>*Frais variables selon la distance</small></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="nextStep()" id="nextStep1">
+                        Continuer <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Étape 2 : Adresse -->
+            <div id="step2Section" class="delivery-section">
+                <h2 class="section-title" id="addressTitle">Informations de livraison</h2>
+                
+                <div id="addressForm">
+                    <div class="address-form">
+                        <div class="form-group">
+                            <label>Nom complet *</label>
+                            <input type="text" class="form-control" id="fullName" placeholder="Votre nom complet" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" class="form-control" id="email" placeholder="votre@email.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Téléphone *</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="+237 658658623" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Adresse *</label>
+                            <input type="text" class="form-control" id="address" placeholder="123 Rue de la Ferme" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Code postal *</label>
+                                <input type="text" class="form-control" id="zipCode" placeholder="75000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Ville *</label>
+                                <input type="text" class="form-control" id="city" placeholder="Paris" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Informations complémentaires</label>
+                            <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Code d'accès, étage, digicode..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="pickupInfo" style="display: none;">
+                    <div class="pickup-info">
+                        <div class="pickup-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="pickup-address">
+                            <h3>Entrepôt Magnickis</h3>
+                            <p>123 Rue de la Ferme</p>
+                            <p>75000 Paris, France</p>
+                            <p><i class="fas fa-phone"></i> +267 xxx xxx</p>
+                        </div>
+                        
+                        <h3>Choisissez votre créneau de retrait</h3>
+                        <div class="pickup-hours">
+                            <div class="hour-card" onclick="selectPickupHour('9h-12h')">
+                                <h4>Matin</h4>
+                                <p>9h - 12h</p>
+                            </div>
+                            <div class="hour-card active" onclick="selectPickupHour('13h-17h')">
+                                <h4>Après-midi</h4>
+                                <p>13h - 17h</p>
+                            </div>
+                            <div class="hour-card" onclick="selectPickupHour('17h-20h')">
+                                <h4>Soir</h4>
+                                <p>17h - 20h</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 2rem;">
+                            <label>Votre nom pour le retrait *</label>
+                            <input type="text" class="form-control" id="pickupName" placeholder="Votre nom" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </button>
+                    <button class="btn btn-primary" onclick="nextStep()" id="nextStep2">
+                        Continuer <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Étape 3 : Paiement -->
+            <div id="step3Section" class="delivery-section">
+                <h2 class="section-title">Méthode de paiement</h2>
+                
+                <div class="payment-methods">
+                    <div class="method-card" onclick="selectPayment('card')" id="cardMethod">
+                        <div class="method-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div>Carte bancaire</div>
+                    </div>
+                    
+                    <div class="method-card" onclick="selectPayment('paypal')" id="paypalMethod">
+                        <div class="method-icon">
+                            <i class="fab fa-paypal"></i>
+                        </div>
+                        <div>PayPal</div>
+                    </div>
+                    
+                    <div class="method-card" onclick="selectPayment('transfer')" id="transferMethod">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div>Virement</div>
+                    </div>
+                </div>
+                
+                <div id="cardForm" class="payment-form">
+                    <div class="form-group">
+                        <label>Numéro de carte *</label>
+                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date d'expiration *</label>
+                            <input type="text" class="form-control" id="cardExpiry" placeholder="MM/AA">
+                        </div>
+                        <div class="form-group">
+                            <label>CVC *</label>
+                            <input type="text" class="form-control" id="cardCVC" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nom sur la carte *</label>
+                        <input type="text" class="form-control" id="cardName" placeholder="Votre nom">
+                    </div>
+                </div>
+                
+                <div id="paypalForm" class="payment-form" style="display: none;">
+                    <div class="pickup-info">
+                        <div class="pickup-icon">
+                            <i class="fab fa-paypal"></i>
+                        </div>
+                        <p>Vous serez redirigé vers PayPal pour finaliser votre paiement.</p>
+                    </div>
+                </div>
+                
+                <div id="transferForm" class="payment-form" style="display: none;">
+                    <div class="pickup-info">
+                        <div class="pickup-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <p>Coordonnées bancaires :</p>
+                        <div class="pickup-address">
+                            <p><strong>Banque :</strong> Magnickis Bank</p>
+                            <p><strong>IBAN :</strong> Cameroun  bondjoun----king bell</p>
+                            <p><strong>BIC :</strong> MAGNFRPP</p>
+                            <p><strong>Référence :</strong> COMMANDE-<span id="orderReference">0000</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-summary">
+                    <h3 style="margin-bottom: 1.5rem;">Récapitulatif de commande</h3>
+                    <div class="summary-item">
+                        <span>Sous-total :</span>
+                        <span id="subtotal">0 FCFA</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Livraison :</span>
+                        <span id="deliveryCost">0 FCFA</span>
+                    </div>
+                    <div class="summary-item total">
+                        <span>Total :</span>
+                        <span id="totalCost">0 FCFA</span>
+                    </div>
+                </div>
+                
+                <div class="deposit-simulation" id="depositSimulation" style="display: none;">
+                    <h3>Simulation de dépôt bancaire</h3>
+                    <p>Le système va simuler un dépôt bancaire avec possibilité de rollback en cas d'erreur.</p>
+                    
+                    <div class="deposit-status">
+                        <div class="status-item active" id="statusInit">
+                            <div class="status-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>Initialisation</div>
+                        </div>
+                        <div class="status-item" id="statusProcess">
+                            <div class="status-icon">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                            <div>Traitement</div>
+                        </div>
+                        <div class="status-item" id="statusVerify">
+                            <div class="status-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>Vérification</div>
+                        </div>
+                        <div class="status-item" id="statusComplete">
+                            <div class="status-icon">
+                                <i class="fas fa-flag-checkered"></i>
+                            </div>
+                            <div>Terminé</div>
+                        </div>
+                    </div>
+                    
+                    <div class="simulation-controls">
+                        <button class="btn btn-primary" onclick="simulateDeposit()" id="simulateBtn">
+                            Simuler le dépôt
+                        </button>
+                        <button class="btn btn-secondary" onclick="simulateRollback()" id="rollbackBtn" style="display: none;">
+                            Simuler un rollback
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </button>
+                    <button class="btn btn-primary" onclick="processPayment()" id="processPaymentBtn">
+                        Payer maintenant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Étape 4 : Confirmation -->
+            <div id="step4Section" class="delivery-section">
+                <div class="confirmation-card">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2>Commande confirmée !</h2>
+                    <div class="confirmation-message">
+                        Votre commande a été validée avec succès. Un email de confirmation vous a été envoyé.
+                    </div>
+                    
+                    <div class="order-details">
+                        <h3 style="margin-bottom: 1rem;">Détails de la commande</h3>
+                        <div class="summary-item">
+                            <span>Numéro de commande :</span>
+                            <strong id="confirmationId">#0000</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date :</span>
+                            <span id="confirmationDate">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Mode de livraison :</span>
+                            <span id="confirmationDelivery">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Montant total :</span>
+                            <strong id="confirmationTotal">0 FCFA</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Statut :</span>
+                            <span class="status-badge status-paid">Confirmée</span>
+                        </div>
+                    </div>
+                    
+                    <div id="pickupInstructions" style="display: none;">
+                        <div class="pickup-info">
+                            <h3>Instructions pour le retrait</h3>
+                            <div class="pickup-address">
+                                <p>Présentez ce numéro à l'accueil :</p>
+                                <h2 style="color: var(--primary-red); margin: 1rem 0;">#<span id="pickupCode">0000</span></h2>
+                                <p>Adresse : 123 Rue de la Ferme, 75000 Paris</p>
+                                <p>Créneau : <span id="pickupSlot">13h-17h</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="deliveryInstructions" style="display: none;">
+                        <div class="pickup-info">
+                            <h3>Suivi de livraison</h3>
+                            <p>Votre commande sera livrée dans les 24-48h.</p>
+                            <p>Numéro de suivi : <strong id="trackingNumber">MGN-0000-0000</strong></p>
+                            <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">
+                                <i class="fas fa-truck"></i> Suivre ma livraison
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="index.html" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> Retour à l'accueil
+                        </a>
+                        <a href="profile.html" class="btn btn-primary">
+                            <i class="fas fa-user"></i> Voir mes commandes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données de la commande
+        let currentStep = 1;
+        let orderData = {
+            delivery: null,
+            address: {},
+            payment: {},
+            pickupSlot: '13h-17h',
+            paymentMethod: 'card'
+        };
+
+        // Récupérer les données de la commande depuis l'URL ou localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderData();
+            updateOrderSummary();
+        });
+
+        // Charger les données de la commande
+        function loadOrderData() {
+            // Récupérer l'ID de commande depuis l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            
+            if (orderId) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const order = orders.find(o => o.id == orderId);
+                
+                if (order) {
+                    // Récupérer le sous-total
+                    const subtotal = order.total;
+                    document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' fcfa';
+                    
+                    // Initialiser les coûts de livraison
+                    let deliveryCost = 0;
+                    if (order.delivery === 'home') {
+                        deliveryCost = 9.99;
+                    }
+                    document.getElementById('deliveryCost').textContent = deliveryCost.toFixed(2) + ' fcfa';
+                    
+                    const totalCost = subtotal + deliveryCost;
+                    document.getElementById('totalCost').textContent = totalCost.toFixed(2) + ' fcfa';
+                    
+                    // Sauvegarder les données
+                    orderData.delivery = order.delivery;
+                    orderData.subtotal = subtotal;
+                    orderData.total = totalCost;
+                    
+                    // Pré-sélectionner le mode de livraison
+                    if (order.delivery === 'pickup') {
+                        selectDelivery('pickup');
+                    } else {
+                        selectDelivery('home');
+                    }
+                }
+            }
+            
+            // Générer une référence de commande
+            document.getElementById('orderReference').textContent = 
+                document.getElementById('confirmationId').textContent = 
+                document.getElementById('pickupCode').textContent = 
+                Math.floor(1000 + Math.random() * 9000);
+            
+            // Date actuelle
+            const now = new Date();
+            document.getElementById('confirmationDate').textContent = now.toLocaleDateString();
+        }
+
+        // Sélectionner le mode de livraison
+        function selectDelivery(type) {
+            orderData.delivery = type;
+            
+            // Mettre à jour l'interface
+            document.querySelectorAll('.delivery-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            if (type === 'pickup') {
+                document.getElementById('pickupOption').classList.add('selected');
+                document.getElementById('addressTitle').textContent = 'Informations pour le retrait';
+                document.getElementById('deliveryCost').textContent = '0 fcfa';
+            } else {
+                document.getElementById('homeOption').classList.add('selected');
+                document.getElementById('addressTitle').textContent = 'Informations de livraison';
+                document.getElementById('deliveryCost').textContent = '9.99 fcfa';
+            }
+            
+            // Mettre à jour le total
+            updateOrderSummary();
+        }
+
+        // Sélectionner l'heure de retrait
+        function selectPickupHour(hour) {
+            orderData.pickupSlot = hour;
+            
+            document.querySelectorAll('.hour-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.hour-card').classList.add('active');
+        }
+
+        // Sélectionner la méthode de paiement
+        function selectPayment(method) {
+            orderData.paymentMethod = method;
+            
+            // Mettre à jour l'interface
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(method + 'Method').classList.add('selected');
+            
+            // Afficher le formulaire correspondant
+            document.getElementById('cardForm').style.display = method === 'card' ? 'block' : 'none';
+            document.getElementById('paypalForm').style.display = method === 'paypal' ? 'block' : 'none';
+            document.getElementById('transferForm').style.display = method === 'transfer' ? 'block' : 'none';
+            
+            // Afficher la simulation pour le virement
+            document.getElementById('depositSimulation').style.display = 
+                method === 'transfer' ? 'block' : 'none';
+        }
+
+        // Passer à l'étape suivante
+        function nextStep() {
+            // Validation de l'étape actuelle
+            if (currentStep === 1) {
+                if (!orderData.delivery) {
+                    alert('Veuillez sélectionner un mode de livraison');
+                    return;
+                }
+            } else if (currentStep === 2) {
+                if (orderData.delivery === 'home') {
+                    // Valider le formulaire d'adresse
+                    const requiredFields = ['fullName', 'email', 'phone', 'address', 'zipCode', 'city'];
+                    for (const field of requiredFields) {
+                        const input = document.getElementById(field);
+                        if (!input.value.trim()) {
+                            alert(`Veuillez remplir le champ "${input.previousElementSibling.textContent}"`);
+                            input.focus();
+                            return;
+                        }
+                    }
+                    
+                    // Sauvegarder l'adresse
+                    orderData.address = {
+                        fullName: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        address: document.getElementById('address').value,
+                        zipCode: document.getElementById('zipCode').value,
+                        city: document.getElementById('city').value,
+                        additionalInfo: document.getElementById('additionalInfo').value
+                    };
+                } else {
+                    // Valider le nom pour le retrait
+                    const pickupName = document.getElementById('pickupName').value;
+                    if (!pickupName.trim()) {
+                        alert('Veuillez indiquer votre nom pour le retrait');
+                        return;
+                    }
+                    orderData.pickupName = pickupName;
+                }
+            } else if (currentStep === 3) {
+                if (orderData.paymentMethod === 'card') {
+                    // Valider les informations de carte
+                    const cardFields = ['cardNumber', 'cardExpiry', 'cardCVC', 'cardName'];
+                    for (const field of cardFields) {
+                        const input = document.getElementById(field);
+                        if (!input.value.trim()) {
+                            alert(`Veuillez remplir toutes les informations de carte`);
+                            return;
+                        }
+                    }
+                    
+                    orderData.payment = {
+                        method: 'card',
+                        cardNumber: document.getElementById('cardNumber').value,
+                        cardExpiry: document.getElementById('cardExpiry').value,
+                        cardCVC: document.getElementById('cardCVC').value,
+                        cardName: document.getElementById('cardName').value
+                    };
+                }
+            }
+            
+            // Mettre à jour l'interface
+            document.getElementById('step' + currentStep).classList.remove('active');
+            document.getElementById('step' + currentStep + 'Section').classList.remove('active');
+            
+            currentStep++;
+            
+            document.getElementById('step' + currentStep).classList.add('active');
+            document.getElementById('step' + currentStep + 'Section').classList.add('active');
+            
+            // Afficher/masquer les formulaires appropriés
+            if (currentStep === 2) {
+                if (orderData.delivery === 'pickup') {
+                    document.getElementById('addressForm').style.display = 'none';
+                    document.getElementById('pickupInfo').style.display = 'block';
+                } else {
+                    document.getElementById('addressForm').style.display = 'block';
+                    document.getElementById('pickupInfo').style.display = 'none';
+                }
+            } else if (currentStep === 4) {
+                // Afficher les informations de confirmation
+                showConfirmation();
+            }
+        }
+
+        // Revenir à l'étape précédente
+        function prevStep() {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            document.getElementById('step' + currentStep + 'Section').classList.remove('active');
+            
+            currentStep--;
+            
+            document.getElementById('step' + currentStep).classList.add('active');
+            document.getElementById('step' + currentStep + 'Section').classList.add('active');
+        }
+
+        // Mettre à jour le récapitulatif
+        function updateOrderSummary() {
+            const subtotal = orderData.subtotal || 0;
+            const deliveryCost = orderData.delivery === 'home' ? 9.99 : 0;
+            const total = subtotal + deliveryCost;
+            
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' fcfa';
+            document.getElementById('deliveryCost').textContent = deliveryCost.toFixed(2) + ' fcfa';
+            document.getElementById('totalCost').textContent = total.toFixed(2) + ' fcfa';
+            
+            orderData.total = total;
+        }
+
+        // Traiter le paiement
+        function processPayment() {
+            if (orderData.paymentMethod === 'transfer') {
+                // Pour le virement, on simule le dépôt
+                simulateDeposit();
+            } else {
+                // Pour les autres méthodes, on procède normalement
+                simulatePayment();
+            }
+        }
+
+        // Simuler un paiement
+        function simulatePayment() {
+            document.getElementById('processPaymentBtn').disabled = true;
+            document.getElementById('processPaymentBtn').innerHTML = 
+                '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
+            
+            // Simulation de traitement
+            setTimeout(() => {
+                const success = Math.random() > 0.1; // 90% de succès
+                
+                if (success) {
+                    alert('Paiement effectué avec succès !');
+                    nextStep(); // Passer à la confirmation
+                } else {
+                    alert('Paiement échoué. Veuillez réessayer avec une autre méthode.');
+                    document.getElementById('processPaymentBtn').disabled = false;
+                    document.getElementById('processPaymentBtn').innerHTML = 
+                        'Payer maintenant';
+                }
+            }, 2000);
+        }
+
+        // Simuler un dépôt bancaire
+        function simulateDeposit() {
+            const statusElements = ['statusInit', 'statusProcess', 'statusVerify', 'statusComplete'];
+            
+            // Réinitialiser les états
+            statusElements.forEach(id => {
+                const elem = document.getElementById(id);
+                elem.className = 'status-item';
+                if (id === 'statusInit') elem.classList.add('active');
+            });
+            
+            document.getElementById('simulateBtn').style.display = 'none';
+            document.getElementById('rollbackBtn').style.display = 'inline-block';
+            
+            // Animation de progression
+            let step = 0;
+            const interval = setInterval(() => {
+                if (step > 0) {
+                    document.getElementById(statusElements[step-1]).classList.remove('active');
+                    document.getElementById(statusElements[step-1]).classList.add('completed');
+                }
+                
+                if (step < statusElements.length) {
+                    document.getElementById(statusElements[step]).classList.add('active');
+                    step++;
+                } else {
+                    clearInterval(interval);
+                    
+                    // Déterminer si le dépôt réussit (90% de chance)
+                    const depositSuccess = Math.random() > 0.1;
+                    
+                    if (depositSuccess) {
+                        // Vérifier si un rollback est nécessaire (10% de chance)
+                        const rollbackNeeded = Math.random() < 0.1;
+                        
+                        if (rollbackNeeded) {
+                            setTimeout(() => {
+                                simulateRollback();
+                            }, 1000);
+                        } else {
+                            alert('Dépôt effectué avec succès !');
+                            nextStep(); // Passer à la confirmation
+                        }
+                    } else {
+                        document.getElementById('statusComplete').classList.remove('completed');
+                        document.getElementById('statusComplete').classList.add('failed');
+                        document.getElementById('statusComplete').querySelector('i').className = 'fas fa-times';
+                        
+                        alert('Dépôt échoué. Veuillez réessayer.');
+                        document.getElementById('simulateBtn').style.display = 'inline-block';
+                        document.getElementById('rollbackBtn').style.display = 'none';
+                    }
+                }
+            }, 1000);
+        }
+
+        // Simuler un rollback
+        function simulateRollback() {
+            alert('Erreur détectée - Rollback en cours...');
+            
+            // Animation de rollback inversé
+            const statusElements = ['statusInit', 'statusProcess', 'statusVerify', 'statusComplete'];
+            
+            for (let i = statusElements.length - 1; i >= 0; i--) {
+                setTimeout(() => {
+                    document.getElementById(statusElements[i]).classList.remove('active', 'completed', 'failed');
+                    if (i === 0) {
+                        document.getElementById(statusElements[i]).classList.add('active');
+                    }
+                }, (statusElements.length - i) * 500);
+            }
+            
+            setTimeout(() => {
+                alert('Rollback effectué. Le montant a été remboursé sur votre compte.');
+                document.getElementById('simulateBtn').style.display = 'inline-block';
+                document.getElementById('rollbackBtn').style.display = 'none';
+            }, 2500);
+        }
+
+        // Afficher la confirmation
+        function showConfirmation() {
+            // Mettre à jour les informations de confirmation
+            document.getElementById('confirmationTotal').textContent = 
+                orderData.total.toFixed(2) + ' FCFA';
+            
+            if (orderData.delivery === 'pickup') {
+                document.getElementById('confirmationDelivery').textContent = 'Retrait en entrepôt';
+                document.getElementById('pickupInstructions').style.display = 'block';
+                document.getElementById('deliveryInstructions').style.display = 'none';
+                document.getElementById('pickupSlot').textContent = orderData.pickupSlot;
+            } else {
+                document.getElementById('confirmationDelivery').textContent = 'Livraison à domicile';
+                document.getElementById('pickupInstructions').style.display = 'none';
+                document.getElementById('deliveryInstructions').style.display = 'block';
+                
+                // Générer un numéro de suivi
+                const tracking = 'MGN-' + 
+                    Math.floor(1000 + Math.random() * 9000) + '-' + 
+                    Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('trackingNumber').textContent = tracking;
+            }
+            
+            // Sauvegarder la commande avec les informations de livraison
+            saveOrder();
+        }
+
+        // Sauvegarder la commande
+        function saveOrder() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            
+            if (orderId) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id == orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].deliveryInfo = {
+                        type: orderData.delivery,
+                        address: orderData.address,
+                        pickupSlot: orderData.pickupSlot,
+                        pickupName: orderData.pickupName
+                    };
+                    orders[orderIndex].paymentMethod = orderData.paymentMethod;
+                    orders[orderIndex].status = 'paid';
+                    orders[orderIndex].paymentDate = new Date().toISOString();
+                    
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Magnickis</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            background: linear-gradient(135deg, var(--primary-dark-red), #1a1a1a);
+            color: white;
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .admin-logo {
+            padding: 0 2rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-logo .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--primary-red);
+            font-size: 1.8rem;
+        }
+
+        .admin-logo h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .admin-menu {
+            padding: 2rem 0;
+        }
+
+        .menu-section {
+            margin-bottom: 2rem;
+        }
+
+        .menu-title {
+            padding: 0 2rem 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .menu-items {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item a:hover,
+        .menu-item a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--primary-light-red);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .admin-main {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px var(--shadow-color);
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-dark-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-dark-red));
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.1), transparent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-size: 1.5rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #28a745;
+        }
+
+        .trend-down {
+            color: #dc3545;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header h3 {
+            color: var(--primary-dark-red);
+            font-size: 1.3rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .recent-orders {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            margin-bottom: 2rem;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-paid { background: #d1ecf1; color: #0c5460; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-primary);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .batch-management,
+        .chicken-management,
+        .sales-management,
+        .marketing-management,
+        .cleaning-management,
+        .care-management {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-dark-red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--primary-dark-red));
+            color: white;
+            border-color: var(--primary-red);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-sidebar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-crow"></i>
+                </div>
+                <h2>Admin Panel</h2>
+                <p style="font-size: 0.9rem; opacity: 0.7;">Magnickis</p>
+            </div>
+
+            <nav class="admin-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title">Tableau de bord</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item">
+                            <a href="#dashboard" class="active" onclick="showSection('dashboard')">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Tableau de bord</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Gestion</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item">
+                            <a href="#batches" onclick="showSection('batches')">
+                                <i class="fas fa-layer-group"></i>
+                                <span>Gestion des lots</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#chickens" onclick="showSection('chickens')">
+                                <i class="fas fa-egg"></i>
+                                <span>État des poulets</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#sales" onclick="showSection('sales')">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Gestion des ventes</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#orders" onclick="showSection('orders')">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Validation des commandes</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Services</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item">
+                            <a href="#marketing" onclick="showSection('marketing')">
+                                <i class="fas fa-bullhorn"></i>
+                                <span>Marketing</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#cleaning" onclick="showSection('cleaning')">
+                                <i class="fas fa-broom"></i>
+                                <span>Nettoyage</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#care" onclick="showSection('care')">
+                                <i class="fas fa-heart"></i>
+                                <span>Soins vétérinaires</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#delivery" onclick="showSection('delivery')">
+                                <i class="fas fa-truck"></i>
+                                <span>Gestion livraison</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Administration</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item">
+                            <a href="#users" onclick="showSection('users')">
+                                <i class="fas fa-users"></i>
+                                <span>Gestion des utilisateurs</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#reports" onclick="showSection('reports')">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Rapports</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#settings" onclick="showSection('settings')">
+                                <i class="fas fa-cog"></i>
+                                <span>Paramètres</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-title">
+                    <h1 id="sectionTitle">Tableau de bord</h1>
+                    <p id="sectionSubtitle">Statistiques et aperçu général</p>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">AM</div>
+                        <div>
+                            <div class="user-name" id="userName">Admin Magnickis</div>
+                            <div class="user-role">Administrateur</div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Déconnexion
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard -->
+            <section id="dashboardSection" class="admin-section active">
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                12%
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalSales">0</div>
+                        <div class="stat-label">Ventes du mois</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-euro-sign"></i>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                8%
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalRevenue">0 €</div>
+                        <div class="stat-label">Chiffre d'affaires</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                5%
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalClients">0</div>
+                        <div class="stat-label">Nouveaux clients</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-egg"></i>
+                            </div>
+                            <div class="stat-trend trend-down">
+                                <i class="fas fa-arrow-down"></i>
+                                3%
+                            </div>
+                        </div>
+                        <div class="stat-value" id="stockLevel">0</div>
+                        <div class="stat-label">Stock disponible</div>
+                    </div>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Évolution des ventes</h3>
+                            <select class="form-control" style="width: auto;" id="salesChartRange">
+                                <option value="7">7 derniers jours</option>
+                                <option value="30" selected>30 derniers jours</option>
+                                <option value="90">3 derniers mois</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Répartition des ventes</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commandes récentes -->
+                <div class="recent-orders">
+                    <div class="chart-header">
+                        <h3>Commandes récentes</h3>
+                        <a href="#orders" class="action-btn" onclick="showSection('orders')">
+                            Voir toutes
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gestion des lots -->
+            <section id="batchesSection" class="admin-section">
+                <div class="batch-management">
+                    <h2 style="color: var(--primary-dark-red); margin-bottom: 2rem;">Gestion des lots de poulets</h2>
+                    
+                    <!-- Formulaire d'ajout -->
+                    <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem;">Ajouter un nouveau lot</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nom du lot</label>
+                                <input type="text" class="form-control" id="batchName" placeholder="Ex: Lot Premium">
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select class="form-control" id="batchType">
+                                    <option value="fresh">Frais</option>
+                                    <option value="frozen">Congelé</option>
+                                    <option value="mixed">Mixte</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Poids (kg)</label>
+                                <input type="text" class="form-control" id="batchWeight" placeholder="1.5-2">
+                            </div>
+                            <div class="form-group">
+                                <label>Âge (jours)</label>
+                                <input type="number" class="form-control" id="batchAge" placeholder="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Quantité</label>
+                                <input type="number" class="form-control" id="batchQuantity" placeholder="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Prix unitaire (€)</label>
+                                <input type="number" step="0.01" class="form-control" id="batchPrice" placeholder="15.00">
+                            </div>
+                            <div class="form-group">
+                                <label>Date d'arrivée</label>
+                                <input type="date" class="form-control" id="batchArrival">
+                            </div>
+                            <div class="form-group">
+                                <label>Date de péremption</label>
+                                <input type="date" class="form-control" id="batchExpiry">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" id="batchDescription" rows="3" placeholder="Description du lot..."></textarea>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="addBatch()">
+                                <i class="fas fa-plus"></i> Ajouter le lot
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetBatchForm()">
+                                <i class="fas fa-redo"></i> Réinitialiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Liste des lots -->
+                    <h3 style="margin-bottom: 1.5rem;">Lots disponibles</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Type</th>
+                                    <th>Poids</th>
+                                    <th>Âge</th>
+                                    <th>Quantité</th>
+                                    <th>Prix</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchesTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- État des poulets -->
+            <section id="chickensSection" class="admin-section">
+                <div class="chicken-management">
+                    <h2 style="color: var(--primary-dark-red); margin-bottom: 2rem;">État des poulets</h2>
+                    
+                    <div class="stats-grid" style="margin-bottom: 2rem;">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">
+                                    <i class="fas fa-egg"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalChickens">0</div>
+                            <div class="stat-label">Total poulets</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="healthyChickens">0</div>
+                            <div class="stat-label">En bonne santé</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="sickChickens">0</div>
+                            <div class="stat-label">À surveiller</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">
+                                    <i class="fas fa-weight"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgWeight">0 kg</div>
+                            <div class="stat-label">Poids moyen</div>
+                        </div>
+                    </div>
+
+                    <!-- Graphique de croissance -->
+                    <div class="chart-card" style="margin-bottom: 2rem;">
+                        <div class="chart-header">
+                            <h3>Courbe de croissance</h3>
+                            <select class="form-control" style="width: auto;" id="growthChartRange">
+                                <option value="7">7 derniers jours</option>
+                                <option value="30" selected>30 derniers jours</option>
+                                <option value="90">3 derniers mois</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Liste des poulaillers -->
+                    <h3 style="margin-bottom: 1.5rem;">État par poulailler</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Poulailler</th>
+                                    <th>Capacité</th>
+                                    <th>Occupé</th>
+                                    <th>Santé</th>
+                                    <th>Poids moyen</th>
+                                    <th>Dernier contrôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coopsTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gestion des ventes -->
+            <section id="salesSection" class="admin-section">
+                <div class="sales-management">
+                    <h2 style="color: var(--primary-dark-red); margin-bottom: 2rem;">Gestion des ventes</h2>
+                    
+                    <!-- Filtres -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Période</label>
+                                <select class="form-control" id="salesPeriod">
+                                    <option value="today">Aujourd'hui</option>
+                                    <option value="week">Cette semaine</option>
+                                    <option value="month" selected>Ce mois</option>
+                                    <option value="quarter">Ce trimestre</option>
+                                    <option value="year">Cette année</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Type de produit</label>
+                                <select class="form-control" id="salesProductType">
+                                    <option value="all">Tous</option>
+                                    <option value="fresh">Frais</option>
+                                    <option value="frozen">Congelé</option>
+                                    <option value="bio">Bio</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Client</label>
+                                <select class="form-control" id="salesClient">
+                                    <option value="all">Tous les clients</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Statut</label>
+                                <select class="form-control" id="salesStatus">
+                                    <option value="all">Tous</option>
+                                    <option value="pending">En attente</option>
+                                    <option value="paid">Payée</option>
+                                    <option value="delivered">Livrée</option>
+                                    <option value="cancelled">Annulée</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group" style="margin-top: 1rem;">
+                            <button class="btn btn-primary" onclick="filterSales()">
+                                <i class="fas fa-filter"></i> Filtrer
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportSales()">
+                                <i class="fas fa-download"></i> Exporter
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des ventes -->
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Vente</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Produits</th>
+                                    <th>Quantité</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Livraison</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button class="page-btn">Précédent</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">Suivant</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Validation des commandes -->
+            <section id="ordersSection" class="admin-section">
+                <div class="batch-management">
+                    <h2 style="color: var(--primary-dark-red); margin-bottom: 2rem;">Validation des commandes</h2>
+                    
+                    <!-- Commandes en attente -->
+                    <h3 style="margin-bottom: 1.5rem;">Commandes en attente de validation</h3>
+                    <div class="table-responsive" style="margin-bottom: 2rem;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Commande</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Lots commandés</th>
+                                    <th>Montant total</th>
+                                    <th>Livraison</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingOrdersTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Commandes validées -->
+                    <h3 style="margin-bottom: 1.5rem;">Commandes validées</h3>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Commande</th>
+                                    <th>Client</th>
+                                    <th>Date validation</th>
+                                    <th>Validé par</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="validatedOrdersTable">
+                                <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Autres sections similaires... -->
+            <!-- Le code est similaire pour les autres sections (marketing, cleaning, care, etc.) -->
+            <!-- Pour des raisons de longueur, je ne les inclue pas toutes -->
+
+        </main>
+    </div>
+
+    <script>
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadAdminData();
+            initializeCharts();
+            setupEventListeners();
+        });
+
+        // Vérification de l'authentification admin
+        function checkAdminAuth() {
+            const user = JSON.parse(localStorage.getItem('magnickis_user'));
+            if (!user || user.type !== 'admin') {
+                window.location.href = 'login.html?redirect=admin';
+                return;
+            }
+
+            // Afficher les informations utilisateur
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('userInitials').textContent = 
+                user.firstName.charAt(0) + user.lastName.charAt(0);
+        }
+
+        // Charger les données admin
+        function loadAdminData() {
+            loadDashboardStats();
+            loadRecentOrders();
+            loadBatches();
+            loadChickensData();
+            loadSalesData();
+            loadPendingOrders();
+        }
+
+        // Charger les statistiques du dashboard
+        function loadDashboardStats() {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+            const batches = JSON.parse(localStorage.getItem('magnickis_batches')) || [];
+            
+            // Statistiques des ventes
+            const currentMonth = new Date().getMonth();
+            const monthlySales = orders.filter(order => {
+                const orderDate = new Date(order.date);
+                return orderDate.getMonth() === currentMonth && order.status === 'paid';
+            });
+            
+            document.getElementById('totalSales').textContent = monthlySales.length;
+            
+            // Chiffre d'affaires
+            const totalRevenue = monthlySales.reduce((sum, order) => sum + order.total, 0);
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' €';
+            
+            // Nouveaux clients (ce mois-ci)
+            const newClients = users.filter(user => {
+                const joinDate = new Date(user.createdAt);
+                return joinDate.getMonth() === currentMonth && user.type === 'client';
+            });
+            document.getElementById('totalClients').textContent = newClients.length;
+            
+            // Stock disponible
+            const totalStock = batches.reduce((sum, batch) => sum + (batch.quantity || 0), 0);
+            document.getElementById('stockLevel').textContent = totalStock;
+        }
+
+        // Charger les commandes récentes
+        function loadRecentOrders() {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+            
+            const recentOrders = orders.slice(0, 5);
+            const table = document.getElementById('recentOrdersTable');
+            
+            if (recentOrders.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-shopping-cart" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem; display: block;"></i>
+                            <p>Aucune commande récente</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            table.innerHTML = recentOrders.map(order => {
+                const user = users.find(u => u.id === order.userId);
+                const userName = user ? `${user.firstName} ${user.lastName}` : 'Client inconnu';
+                const statusClass = `status-${order.status}`;
+                const statusText = getStatusText(order.status);
+                
+                return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${userName}</td>
+                        <td>${new Date(order.date).toLocaleDateString()}</td>
+                        <td>${order.total.toFixed(2)} €</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="viewOrder(${order.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${order.status === 'pending' ? `
+                                <button class="action-btn primary" onclick="validateOrder(${order.id})" style="margin-left: 0.5rem;">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Obtenir le texte du statut
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'En attente',
+                'paid': 'Payée',
+                'delivered': 'Livrée',
+                'cancelled': 'Annulée'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Initialiser les graphiques
+        function initializeCharts() {
+            // Graphique des ventes
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            window.salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Ventes (€)',
+                        data: [1200, 1900, 1500, 2300, 1800, 2500, 2200],
+                        borderColor: '#C62828',
+                        backgroundColor: 'rgba(198, 40, 40, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Graphique de distribution
+            const distCtx = document.getElementById('salesDistributionChart').getContext('2d');
+            window.salesDistributionChart = new Chart(distCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Frais', 'Congelé', 'Bio', 'Premium'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: [
+                            '#C62828',
+                            '#8B0000',
+                            '#FF5252',
+                            '#D2691E'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Graphique de croissance
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            window.growthChart = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7'],
+                    datasets: [{
+                        label: 'Poids moyen (kg)',
+                        data: [0.5, 0.8, 1.2, 1.6, 1.9, 2.1, 2.3],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Poids (kg)'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Afficher une section
+        function showSection(sectionId) {
+            // Mettre à jour le menu
+            document.querySelectorAll('.menu-item a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section sélectionnée
+            document.getElementById(sectionId + 'Section').classList.add('active');
+            
+            // Mettre à jour le titre
+            updateSectionTitle(sectionId);
+            
+            // Charger les données si nécessaire
+            if (sectionId === 'batches') {
+                loadBatches();
+            } else if (sectionId === 'chickens') {
+                loadChickensData();
+            } else if (sectionId === 'sales') {
+                loadSalesData();
+            } else if (sectionId === 'orders') {
+                loadPendingOrders();
+            }
+        }
+
+        // Mettre à jour le titre de section
+        function updateSectionTitle(sectionId) {
+            const titles = {
+                'dashboard': 'Tableau de bord',
+                'batches': 'Gestion des lots',
+                'chickens': 'État des poulets',
+                'sales': 'Gestion des ventes',
+                'orders': 'Validation des commandes',
+                'marketing': 'Marketing',
+                'cleaning': 'Nettoyage',
+                'care': 'Soins vétérinaires',
+                'delivery': 'Gestion livraison',
+                'users': 'Gestion des utilisateurs',
+                'reports': 'Rapports',
+                'settings': 'Paramètres'
+            };
+            
+            document.getElementById('sectionTitle').textContent = titles[sectionId] || sectionId;
+            document.getElementById('sectionSubtitle').textContent = 
+                sectionId === 'dashboard' ? 'Statistiques et aperçu général' : 'Gestion et administration';
+        }
+
+        // Charger les lots
+        function loadBatches() {
+            const batches = JSON.parse(localStorage.getItem('magnickis_batches')) || [];
+            const table = document.getElementById('batchesTable');
+            
+            if (batches.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-layer-group" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem; display: block;"></i>
+                            <p>Aucun lot enregistré</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            table.innerHTML = batches.map(batch => {
+                const typeText = batch.type === 'fresh' ? 'Frais' : 
+                               batch.type === 'frozen' ? 'Congelé' : 'Mixte';
+                
+                return `
+                    <tr>
+                        <td>#${batch.id}</td>
+                        <td>${batch.name}</td>
+                        <td>${typeText}</td>
+                        <td>${batch.weight} kg</td>
+                        <td>${batch.age} jours</td>
+                        <td>${batch.quantity}</td>
+                        <td>${batch.price.toFixed(2)} €</td>
+                        <td>
+                            <span class="status-badge ${batch.quantity > 0 ? 'status-paid' : 'status-cancelled'}">
+                                ${batch.quantity > 0 ? 'Disponible' : 'Épuisé'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn" onclick="editBatch(${batch.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" onclick="deleteBatch(${batch.id})" style="margin-left: 0.5rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Ajouter un lot
+        function addBatch() {
+            const batch = {
+                id: Date.now(),
+                name: document.getElementById('batchName').value,
+                type: document.getElementById('batchType').value,
+                weight: document.getElementById('batchWeight').value,
+                age: parseInt(document.getElementById('batchAge').value),
+                quantity: parseInt(document.getElementById('batchQuantity').value),
+                price: parseFloat(document.getElementById('batchPrice').value),
+                arrival: document.getElementById('batchArrival').value,
+                expiry: document.getElementById('batchExpiry').value,
+                description: document.getElementById('batchDescription').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Validation
+            if (!batch.name || !batch.weight || !batch.age || !batch.quantity || !batch.price) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            const batches = JSON.parse(localStorage.getItem('magnickis_batches')) || [];
+            batches.push(batch);
+            localStorage.setItem('magnickis_batches', JSON.stringify(batches));
+            
+            alert('Lot ajouté avec succès !');
+            resetBatchForm();
+            loadBatches();
+            loadDashboardStats(); // Mettre à jour les statistiques
+        }
+
+        // Réinitialiser le formulaire des lots
+        function resetBatchForm() {
+            document.getElementById('batchName').value = '';
+            document.getElementById('batchType').value = 'fresh';
+            document.getElementById('batchWeight').value = '';
+            document.getElementById('batchAge').value = '';
+            document.getElementById('batchQuantity').value = '';
+            document.getElementById('batchPrice').value = '';
+            document.getElementById('batchArrival').value = '';
+            document.getElementById('batchExpiry').value = '';
+            document.getElementById('batchDescription').value = '';
+        }
+
+        // Charger les données des poulets
+        function loadChickensData() {
+            // Données simulées
+            document.getElementById('totalChickens').textContent = '1250';
+            document.getElementById('healthyChickens').textContent = '1180';
+            document.getElementById('sickChickens').textContent = '70';
+            document.getElementById('avgWeight').textContent = '2.1 kg';
+            
+            // Charger les poulaillers
+            const coops = [
+                { id: 1, name: 'Poulailler A', capacity: 300, occupied: 280, health: 'Bon', avgWeight: '2.2 kg', lastCheck: '2024-01-15' },
+                { id: 2, name: 'Poulailler B', capacity: 350, occupied: 320, health: 'Moyen', avgWeight: '2.0 kg', lastCheck: '2024-01-14' },
+                { id: 3, name: 'Poulailler C', capacity: 400, occupied: 380, health: 'Bon', avgWeight: '2.3 kg', lastCheck: '2024-01-15' },
+                { id: 4, name: 'Poulailler D', capacity: 200, occupied: 180, health: 'Mauvais', avgWeight: '1.8 kg', lastCheck: '2024-01-13' }
+            ];
+            
+            const table = document.getElementById('coopsTable');
+            table.innerHTML = coops.map(coop => `
+                <tr>
+                    <td>${coop.name}</td>
+                    <td>${coop.capacity}</td>
+                    <td>${coop.occupied} (${Math.round(coop.occupied/coop.capacity*100)}%)</td>
+                    <td>
+                        <span class="status-badge ${coop.health === 'Bon' ? 'status-delivered' : 
+                                                     coop.health === 'Moyen' ? 'status-pending' : 
+                                                     'status-cancelled'}">
+                            ${coop.health}
+                        </span>
+                    </td>
+                    <td>${coop.avgWeight}</td>
+                    <td>${coop.lastCheck}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewCoop(${coop.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Charger les données des ventes
+        function loadSalesData() {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+            
+            const table = document.getElementById('salesTable');
+            
+            if (orders.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem; display: block;"></i>
+                            <p>Aucune vente enregistrée</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            table.innerHTML = orders.map(order => {
+                const user = users.find(u => u.id === order.userId);
+                const userName = user ? `${user.firstName} ${user.lastName}` : 'Client inconnu';
+                const statusClass = `status-${order.status}`;
+                const statusText = getStatusText(order.status);
+                const deliveryText = order.delivery === 'pickup' ? 'Retrait' : 'Livraison';
+                
+                const productsCount = order.batches ? order.batches.length : 0;
+                const totalQuantity = order.batches ? 
+                    order.batches.reduce((sum, batch) => sum + (batch.quantity || 1), 0) : 0;
+                
+                return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${new Date(order.date).toLocaleDateString()}</td>
+                        <td>${userName}</td>
+                        <td>${productsCount} produit(s)</td>
+                        <td>${totalQuantity}</td>
+                        <td>${order.total.toFixed(2)} €</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${deliveryText}</td>
+                        <td>
+                            <button class="action-btn" onclick="viewSale(${order.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Charger les commandes en attente
+        function loadPendingOrders() {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            const users = JSON.parse(localStorage.getItem('magnickis_users')) || [];
+            
+            const pendingOrders = orders.filter(order => order.status === 'pending');
+            const validatedOrders = orders.filter(order => order.status === 'paid' || order.status === 'delivered');
+            
+            // Commandes en attente
+            const pendingTable = document.getElementById('pendingOrdersTable');
+            if (pendingOrders.length === 0) {
+                pendingTable.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem; display: block;"></i>
+                            <p>Aucune commande en attente de validation</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                pendingTable.innerHTML = pendingOrders.map(order => {
+                    const user = users.find(u => u.id === order.userId);
+                    const userName = user ? `${user.firstName} ${user.lastName}` : 'Client inconnu';
+                    const deliveryText = order.delivery === 'pickup' ? 'Retrait en entrepôt' : 'Livraison à domicile';
+                    
+                    return `
+                        <tr>
+                            <td>#${order.id}</td>
+                            <td>${userName}</td>
+                            <td>${new Date(order.date).toLocaleDateString()}</td>
+                            <td>${order.batches.length} lot(s)</td>
+                            <td>${order.total.toFixed(2)} €</td>
+                            <td>${deliveryText}</td>
+                            <td>
+                                <button class="action-btn primary" onclick="validateOrder(${order.id})">
+                                    <i class="fas fa-check"></i> Valider
+                                </button>
+                                <button class="action-btn" onclick="rejectOrder(${order.id})" style="margin-left: 0.5rem;">
+                                    <i class="fas fa-times"></i> Rejeter
+                                </button>
+                                <button class="action-btn" onclick="viewOrder(${order.id})" style="margin-left: 0.5rem;">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Commandes validées
+            const validatedTable = document.getElementById('validatedOrdersTable');
+            if (validatedOrders.length === 0) {
+                validatedTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <p>Aucune commande validée</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                validatedTable.innerHTML = validatedOrders.slice(0, 10).map(order => {
+                    const user = users.find(u => u.id === order.userId);
+                    const userName = user ? `${user.firstName} ${user.lastName}` : 'Client inconnu';
+                    
+                    return `
+                        <tr>
+                            <td>#${order.id}</td>
+                            <td>${userName}</td>
+                            <td>${order.paymentDate ? new Date(order.paymentDate).toLocaleDateString() : '-'}</td>
+                            <td>Admin</td>
+                            <td><span class="status-badge ${order.status === 'paid' ? 'status-paid' : 'status-delivered'}">
+                                ${getStatusText(order.status)}
+                            </span></td>
+                            <td>
+                                <button class="action-btn" onclick="viewOrder(${order.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Valider une commande
+        function validateOrder(orderId) {
+            if (confirm('Valider cette commande ?')) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].status = 'paid';
+                    orders[orderIndex].paymentDate = new Date().toISOString();
+                    orders[orderIndex].validatedBy = 'Admin';
+                    
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                    
+                    alert('Commande validée avec succès !');
+                    loadPendingOrders();
+                    loadRecentOrders();
+                    loadDashboardStats();
+                }
+            }
+        }
+
+        // Rejeter une commande
+        function rejectOrder(orderId) {
+            const reason = prompt('Raison du rejet :');
+            if (reason !== null) {
+                const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex > -1) {
+                    orders[orderIndex].status = 'cancelled';
+                    orders[orderIndex].rejectionReason = reason;
+                    
+                    localStorage.setItem('magnickis_orders', JSON.stringify(orders));
+                    
+                    alert('Commande rejetée !');
+                    loadPendingOrders();
+                    loadRecentOrders();
+                }
+            }
+        }
+
+        // Voir une commande
+        function viewOrder(orderId) {
+            const orders = JSON.parse(localStorage.getItem('magnickis_orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                alert('Commande non trouvée');
+                return;
+            }
+            
+            const batchesList = order.batches ? order.batches.map(batch => 
+                `${batch.name} x${batch.quantity} - ${batch.total.toFixed(2)} €`
+            ).join('\n') : 'Aucun lot';
+            
+            alert(`
+                Commande #${order.id}
+                
+                Client: ID ${order.userId}
+                Date: ${new Date(order.date).toLocaleString()}
+                Statut: ${getStatusText(order.status)}
+                Livraison: ${order.delivery === 'pickup' ? 'Retrait' : 'Domicile'}
+                Total: ${order.total.toFixed(2)} fcfa
+                
+                Lots:
+                ${batchesList}
+            `);
+        }
+
+        // Configuration des événements
+        function setupEventListeners() {
+            // Filtre des graphiques
+            document.getElementById('salesChartRange').addEventListener('change', updateSalesChart);
+            document.getElementById('growthChartRange').addEventListener('change', updateGrowthChart);
+            
+            // Filtre des ventes
+            document.getElementById('salesPeriod').addEventListener('change', filterSales);
+        }
+
+        // Mettre à jour le graphique des ventes
+        function updateSalesChart() {
+            const range = document.getElementById('salesChartRange').value;
+            // Dans un projet réel, vous chargeriez les données correspondantes
+            console.log('Mise à jour du graphique des ventes pour', range, 'jours');
+        }
+
+        // Mettre à jour le graphique de croissance
+        function updateGrowthChart() {
+            const range = document.getElementById('growthChartRange').value;
+            console.log('Mise à jour du graphique de croissance pour', range, 'jours');
+        }
+
+        // Filtrer les ventes
+        function filterSales() {
+            console.log('Filtrage des ventes');
+            // Implémentation réelle chargerait les données filtrées
+        }
+
+        // Exporter les ventes
+        function exportSales() {
+            alert('Exportation des ventes en cours...');
+            // Implémentation réelle générerait un fichier CSV/Excel
+        }
+
+        // Déconnexion
+        function logout() {
+            if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Fonctions pour les autres fonctionnalités (simplifiées)
+        function editBatch(batchId) {
+            alert('Édition du lot #' + batchId);
+        }
+
+        function deleteBatch(batchId) {
+            if (confirm('Supprimer ce lot ?')) {
+                alert('Lot #' + batchId + ' supprimé');
+                // Implémentation réelle supprimerait le lot
+            }
+        }
+
+        function viewCoop(coopId) {
+            alert('Détails du poulailler #' + coopId);
+        }
+
+        function viewSale(saleId) {
+            alert('Détails de la vente #' + saleId);
+        }
+    </script>
+</body>
+</html>

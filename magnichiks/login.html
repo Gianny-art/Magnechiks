@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Magnickis</title>
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <div class="logo-icon">
+                <i class="fas fa-crow"></i>
+            </div>
+            <h1>MAGNICHIKS</h1>
+            <p class="logo-subtitle">Excellence Avicole</p>
+        </div>
+
+        <!-- Formulaires -->
+        <div class="auth-forms">
+            <!-- Connexion -->
+            <div class="form-container active" id="loginForm">
+                <h2>Connexion</h2>
+                <p class="form-subtitle">Accédez à votre espace personnel</p>
+                
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="votre@email.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Mot de passe</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="Votre mot de passe" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Se souvenir de moi</span>
+                        </label>
+                        <a href="#forgot" class="forgot-password">Mot de passe oublié ?</a>
+                    </div>
+                    
+                    <button type="submit" class="auth-submit">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Se Connecter
+                    </button>
+                    
+                    <div class="auth-divider">
+                        <span>Ou continuer avec</span>
+                    </div>
+                    
+                    <div class="social-auth">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook"></i>
+                            Facebook
+                        </button>
+                    </div>
+                    
+                    <p class="auth-switch">
+                        Nouveau chez Magnickis ? 
+                        <a href="#" onclick="showRegister()">Créer un compte</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Inscription -->
+            <div class="form-container" id="registerForm">
+                <h2>Inscription</h2>
+                <p class="form-subtitle">Rejoignez la communauté Magnickis</p>
+                
+                <form id="registerFormElement">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Prénom</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="firstName" placeholder="Votre prénom" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Nom</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="lastName" placeholder="Votre nom" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="registerEmail" placeholder="votre@email.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phone" placeholder="+33 1 23 45 67 89">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="registerPassword">Mot de passe</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Créez un mot de passe" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmation</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="confirmPassword" placeholder="Confirmez le mot de passe" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userType">Type de compte</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-users"></i>
+                            <select id="userType">
+                                <option value="client">Client</option>
+                                <option value="admin">Administrateur</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>J'accepte les <a href="#terms">conditions d'utilisation</a></span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-submit">
+                        <i class="fas fa-user-plus"></i>
+                        Créer mon compte
+                    </button>
+                    
+                    <p class="auth-switch">
+                        Déjà un compte ? 
+                        <a href="#" onclick="showLogin()">Se connecter</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Mot de passe oublié -->
+            <div class="form-container" id="forgotForm">
+                <h2>Mot de passe oublié</h2>
+                <p class="form-subtitle">Nous vous enverrons un lien de réinitialisation</p>
+                
+                <form id="forgotFormElement">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="forgotEmail" placeholder="votre@email.com" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="auth-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Envoyer le lien
+                    </button>
+                    
+                    <p class="auth-switch">
+                        <a href="#" onclick="showLogin()">← Retour à la connexion</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bannière latérale -->
+        <div class="auth-banner">
+            <div class="banner-content">
+                <h2>Rejoignez notre communauté</h2>
+                <ul class="banner-features">
+                    <li><i class="fas fa-check"></i> Commandes rapides et sécurisées</li>
+                    <li><i class="fas fa-check"></i> Suivi en temps réel</li>
+                    <li><i class="fas fa-check"></i> Offres exclusives</li>
+                    <li><i class="fas fa-check"></i> Support premium</li>
+                </ul>
+                <div class="banner-stats">
+                    <div class="stat">
+                        <h3>10K+</h3>
+                        <p>Clients satisfaits</p>
+                    </div>
+                    <div class="stat">
+                        <h3>25+</h3>
+                        <p>Ans d'expérience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="authNotification"></div>
+
+    <script src="scripts/auth.js"></script>
+</body>
+</html>
