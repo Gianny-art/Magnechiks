@@ -4,7 +4,7 @@ const users = JSON.parse(localStorage.getItem('magnickis_users')) || [
         id: 1,
         firstName: 'Admin',
         lastName: 'Magnickis',
-        email: 'admin@magnickis.fr',
+        email: 'admin@magnickis.com',
         password: 'admin123',
         phone: '+237 XXX XXX XXX',
         type: 'admin',
